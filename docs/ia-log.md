@@ -47,6 +47,15 @@ Este arquivo registra usos relevantes de ferramentas de inteligência artificial
 - **Resultado gerado:** A análise concluiu que a especificação e o design estão documentados como propostas, e que há código de front-end em modo protótipo. Não foi encontrada evidência no repositório de publicação do site no S3, conexão com uma API funcional, backend, recursos AWS, `specs/tasks.md`, README na raiz ou pasta de evidências. Também foi apontado que o ADR precisa ser confirmado pelo grupo e que o enunciado pede uso do GitHub Copilot, enquanto os registros existentes identificam o Codex.
 - **Decisão do grupo:** Revisar as conclusões, confirmar as decisões de arquitetura e planejar as pendências de acordo com as datas de entrega. Não foi registrada nesta conversa uma validação do grupo nem a publicação de recursos AWS.
 
+## Registro — Organização dos arquivos na raiz do repositório
+
+- **Etapa:** Organização do repositório
+- **Data:** 15/10/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Mover todos os arquivos do projeto para a raiz do repositório, removendo o nível de diretório `projeto2/` que escondia o README na página inicial do GitHub.
+- **Resultado gerado:** Os diretórios `docs/`, `frontend/` e `specs/`, além de `enunciado.md`, foram movidos para a raiz. O README raiz foi atualizado para descrever a estrutura e o estado da primeira etapa.
+- **Decisão do grupo:** A nova estrutura corresponde à organização desejada; a alteração será registrada na branch `v1`.
+
 ## Reflexão final
 
 Adicionar esta reflexão ao final do projeto, depois de avaliar como as ferramentas de IA ajudaram, quais sugestões foram alteradas ou descartadas e como o grupo verificou o resultado.
