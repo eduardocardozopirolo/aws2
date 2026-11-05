@@ -1,6 +1,24 @@
 # Design — Sistema de Gestão de Academia
 
-> Este documento descreve a arquitetura planejada para atender à especificação em `specs/spec.md`. Os recursos AWS ainda precisam ser criados e configurados conforme o README do projeto.
+> A arquitetura completa planejada atende à especificação em specs/spec.md. Em 03/11/2026, a VPC, o endpoint Gateway do S3, o DB subnet group e o RDS privado foram configurados no Learner Lab. O grupo confirmou a criação do banco, a aplicação do schema, a conferência das tabelas e a remoção da regra temporária sg-admin-db. Em 04/11/2026, confirmou a implantação da Lambda CRUD e da HTTP API e que a API respondeu após corrigir a incompatibilidade entre pg8000 e scramp. Em 05/11/2026, confirmou a publicação do site no S3 e a correção do CORS. A execução formal do CRUD e o registro de evidências continuam pendentes; upload, processamento de documentos e relatório ainda não foram implantados. Veja docs/evidencias/infraestrutura.md e specs/tasks.md para o estado detalhado.
+
+## Estado da implantação — 05/11/2026
+
+| Componente | Estado |
+|---|---|
+| VPC academia em us-east-1 | Criada; CIDR 10.20.0.0/16 |
+| Rede | Uma subnet pública e duas privadas em AZs diferentes; route tables privadas sem rota para a internet |
+| Acesso privado ao S3 | VPC Gateway Endpoint endpoint-academia associado às route tables privadas |
+| RDS PostgreSQL | db-academia, porta 5432, Publicly accessible: No |
+| DB subnet group | academia-db-subnet-group, duas subnets privadas |
+| Database academia | Criado; grupo confirmou aplicação do schema e tabelas planos e alunos conferidas com \dt |
+| Security Groups | sg-lambda-api, sg-lambda-processamento e sg-rds configurados conforme confirmação do grupo; verificar IDs e regras no Console |
+| EC2 administrativa | Instância temporária Ubuntu usada para aplicação do schema; regra sg-admin-db removida, encerramento da instância ainda não confirmado |
+| Lambda CRUD e HTTP API | Implantadas segundo confirmação do grupo; integração com RDS respondeu após correção da dependência; fluxo CRUD ainda precisa ser evidenciado |
+| Bucket S3 de documentos | Ainda não implantado |
+| Site estático | Publicado no bucket S3 `frontend291000` segundo confirmação do grupo; CORS corrigido; URL final a registrar |
+
+Os valores observados e os limites das evidências estão registrados em docs/evidencias/infraestrutura.md. As capturas da VPC, RDS e lista EC2 já estão salvas nessa pasta; as evidências restantes continuam listadas no próprio inventário.
 
 ## 1. Arquitetura proposta
 
@@ -8,7 +26,7 @@
 
 ```mermaid
 flowchart LR
-    U[Equipe da academia<br/>navegador] -->|HTTPS: página| WEB[Amazon S3<br/>site estático público]
+    U[Equipe da academia<br/>navegador] -->|HTTP: endpoint de site S3| WEB[Amazon S3<br/>site estático público]
     U -->|HTTPS: chamadas da API| APIGW[Amazon API Gateway<br/>CORS habilitado]
     WEB -->|HTTPS: chamadas da API| APIGW
     APIGW -->|CRUD e URL pré-assinada| CRUD[AWS Lambda<br/>CRUD e upload]
@@ -100,6 +118,10 @@ erDiagram
 - A chave estrangeira `ALUNO.plano_id` impede apagar um plano ainda referenciado. A chave estrangeira `DOCUMENTO.aluno_id` impede excluir um aluno com documentos sem que a política de retenção e remoção tenha sido definida.
 - Para manter histórico e integridade, recomenda-se inativar planos e alunos em vez de apagá-los quando já tiverem relações. Se a interface oferecer exclusão física, a API deve respeitar as restrições das chaves estrangeiras e explicar por que a exclusão não foi permitida.
 
+### Schema da entrega de 23/10
+
+O arquivo sql/001_schema.sql cria planos e alunos, com preço e duração validados no banco, e-mail único sem distinção de maiúsculas/minúsculas e FK alunos.plano_id com ON DELETE RESTRICT. documentos permanece no modelo alvo e será adicionado em uma migração posterior junto ao RF-02/RF-03.
+
 ## 3. Rotas da API
 
 Todas as rotas usam HTTPS pelo API Gateway e retornam JSON, exceto o envio direto do conteúdo do arquivo ao S3. O prefixo de versão (`/v1`) é proposto para permitir evolução futura. Os métodos e nomes abaixo são o contrato planejado; o formato final dos payloads será detalhado durante a implementação.
@@ -159,7 +181,7 @@ Security Groups são stateful. As Lambdas não recebem IP público. Como Lambdas
 
 ## 5. ADR-001 — Execução do CRUD em Lambda
 
-**Status:** Proposta
+**Status:** Decisão adotada e função CRUD implantada no Learner Lab em 04/11/2026, segundo confirmação do grupo.
 
 ### Contexto
 
@@ -184,11 +206,19 @@ Executar as rotas de CRUD e emissão de URLs pré-assinadas em AWS Lambda dentro
 - Aumentar a concorrência sem controle pode esgotar conexões disponíveis no RDS; monitorar logs e erros no CloudWatch durante as demonstrações.
 - Se o limite de conexões ou a latência se tornar um problema, o grupo deve rever esta decisão e registrar um novo ADR antes de alterar a arquitetura.
 
-## 6. Decisões pendentes antes da implementação
+## 6. Implementação local do CRUD RF-01
 
-- Confirmar no Learner Lab a engine e a classe do RDS disponíveis; este design propõe PostgreSQL e porta `5432`.
+O arquivo backend/crud_lambda.py implementa as rotas de planos e alunos acima usando Lambda Python e pg8000. Configure as variáveis de ambiente do banco diretamente na função, sem incluí-las no repositório. A função usa TLS para a conexão PostgreSQL, fecha a conexão ao final da invocação e valida os dados antes de executar SQL parametrizado. Restrições de FK e e-mail duplicado retornam HTTP 409.
+
+O grupo confirmou que criou a VPC e o RDS privado, aplicou sql/001_schema.sql usando uma EC2 Ubuntu temporária na subnet pública e conferiu as tabelas planos e alunos. Também confirmou a remoção da regra temporária de sg-admin-db, a implantação da Lambda CRUD e da HTTP API, a publicação do site no S3 e a correção do CORS. A interface não carrega dados de demonstração. O fluxo de CRUD ainda precisa ser executado e registrado. Confirme no Console se a EC2 administrativa já foi encerrada.
+
+## 7. Decisões pendentes antes das etapas seguintes
+
+- Registrar a classe e o tamanho de armazenamento efetivamente usados no RDS; a instância criada está na região us-east-1, usa PostgreSQL e porta 5432.
 - Definir o limite máximo de tamanho dos documentos e o prazo exato de expiração das URLs pré-assinadas.
 - Definir como serão obtidas as credenciais de banco sem colocá-las no repositório e quais permissões já existem na `LabRole`.
 - Confirmar se a exclusão de aluno será física ou se a interface oferecerá apenas inativação quando houver documentos associados.
-- Registrar no README a sequência de criação manual dos recursos, configuração das subnets, Security Groups, endpoint S3, CORS, Lambdas, API Gateway e publicação do front-end.
+- Registrar a classe e o tamanho de armazenamento efetivamente usados no RDS e confirmar no Console os IDs, associações e regras dos Security Groups.
+- Registrar a URL final do site, salvar evidências da publicação e executar o roteiro CRUD.
+- Implementar a tabela documentos, o processamento S3 e o relatório; atualizar o design conforme os recursos implantados.
 

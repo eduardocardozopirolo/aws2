@@ -1,28 +1,55 @@
-# Projeto 2 — Sistema de Gestão de Academia
+# Sistema de Gestão de Academia
 
-Este repositório contém a primeira etapa do projeto acadêmico de gestão de uma academia: definição do problema, especificação inicial, proposta de arquitetura e protótipo estático da interface.
+Projeto acadêmico para administrar planos e alunos de uma academia. O front-end estático consome uma HTTP API no API Gateway; a API executa o CRUD em uma função AWS Lambda conectada a um RDS PostgreSQL privado.
 
-## O que foi feito nesta etapa
+## Estado do projeto
 
-- Definido o domínio da academia e o escopo inicial para planos, alunos, documentos de matrícula e relatório de alunos ativos por plano.
-- Criada a especificação em [`specs/spec.md`](specs/spec.md), com personas, regras de negócio, histórias de usuário, critérios de aceite e relação com os requisitos RF-01 a RF-05.
-- Criado o design proposto em [`specs/design.md`](specs/design.md), com diagramas de arquitetura e modelo ER, rotas da API, regras de rede e um ADR para a execução do CRUD.
-- Criado o protótipo web estático em [`frontend/`](frontend/), com telas de visão geral, alunos, planos, documentos e relatórios.
-- Registrado o uso de IA em [`docs/ia-log.md`](docs/ia-log.md).
+Atualizado em 05/11/2026, com base no código versionado e nas confirmações do grupo. Não houve acesso direto à conta AWS nesta revisão.
+
+- **RF-01 — planos e alunos:** handler Lambda e interface integrados à API. O grupo confirmou que API, site S3 e CORS estão funcionando. A execução completa dos casos CRUD e o salvamento das evidências ainda precisam ser registrados.
+- **RF-02/RF-03 — documentos:** tabela, upload com URL pré-assinada e processamento S3 ainda não estão implementados neste repositório.
+- **RF-04 — relatório:** ainda não está implementado neste repositório.
+- **Infraestrutura:** inventário conhecido e itens a confirmar estão em [docs/evidencias/infraestrutura.md](docs/evidencias/infraestrutura.md).
+
+## Executar localmente
+
+Requer Python 3 para servir os arquivos estáticos e uma API já implantada para usar os dados reais.
+
+```bash
+python3 -m http.server 8000 --directory frontend
+```
+
+Abra <http://localhost:8000>. A URL da API está em [frontend/config.js](frontend/config.js). Para apontar a interface a outra implantação, altere `API_BASE_URL`, incluindo o estágio e o prefixo `/v1` quando aplicável. Não coloque senhas, chaves ou credenciais nesse arquivo.
+
+## Empacotar a Lambda CRUD
+
+Requer Python 3, `pip` e `zip`:
+
+```bash
+bash backend/package.sh
+```
+
+O comando cria `backend/crud_lambda.zip`, pronto para envio à função Lambda. O ZIP é um artefato gerado e está excluído do Git. O handler configurado na AWS é `crud_lambda.handler`.
+
+## Testes e evidências
+
+- [Plano de testes da aplicação](docs/evidencias/plano-de-testes-aplicacao.md): cobre os módulos implementados e identifica os que aguardam implementação.
+- [Roteiro de integração RF-01](docs/evidencias/roteiro-integracao-rf01.md): fluxo manual entre interface, API, Lambda e RDS.
+- [Infraestrutura AWS](docs/evidencias/infraestrutura.md): recursos conhecidos, fonte das informações e confirmações pendentes.
+
+As capturas disponíveis da VPC, RDS, EC2, site de planos e resposta da API estão em `docs/evidencias/infraestrutura.md`. Capturas de alunos com dados pessoais foram mantidas localmente e ignoradas pelo Git; gere versões com dados fictícios para incluí-las no repositório público. Os resultados dos demais passos do roteiro CRUD ainda devem ser adicionados após a execução pelo grupo.
 
 ## Estrutura
 
-- `specs/` — especificação e design do sistema.
-- `frontend/` — protótipo estático e instruções de configuração/publicação.
-- `docs/` — registro de uso de IA e, futuramente, evidências do projeto.
-- `enunciado.md` — enunciado do Projeto 2.
+```text
+backend/       Lambda CRUD, dependências e script de empacotamento
+docs/          evidências, plano de testes e registro de uso de IA
+frontend/      site estático
+specs/         enunciado detalhado, design e tarefas
+sql/           schema inicial PostgreSQL
+enunciado.md   enunciado original
+```
 
-## Estado atual
+## Segurança
 
-O front-end pode ser aberto localmente ou publicado como site estático no Amazon S3. Sem uma URL de API em `frontend/config.js`, ele funciona em modo de protótipo com dados demonstrativos armazenados no navegador; cadastros e envios não são persistidos no RDS ou S3.
-
-Esta etapa ainda não inclui backend, banco de dados, recursos AWS provisionados nem publicação do site. O README será ampliado nas próximas etapas com as instruções completas para criar a infraestrutura manualmente, executar o sistema e publicá-lo conforme o enunciado.
-
-## Abrir o protótipo
-
-Abra [`frontend/index.html`](frontend/index.html) em um navegador. Para configurar a API e publicar no S3, consulte [`frontend/README.md`](frontend/README.md).
+O API Gateway é público para permitir acesso pelo site. O RDS permanece privado e as credenciais do banco devem existir somente na configuração da função Lambda, nunca no repositório. A API não implementa autenticação nesta versão acadêmica; use dados artificiais e não exponha dados reais.

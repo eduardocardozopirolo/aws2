@@ -59,3 +59,50 @@ Este arquivo registra usos relevantes de ferramentas de inteligência artificial
 ## Reflexão final
 
 Adicionar esta reflexão ao final do projeto, depois de avaliar como as ferramentas de IA ajudaram, quais sugestões foram alteradas ou descartadas e como o grupo verificou o resultado.
+
+## Registro — remoção dos dados de demonstração e roteiro de integração
+
+- **Etapa:** Integração do front-end com a API (RF-01)
+- **Data:** 04/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Remover exemplos locais que podiam ser confundidos com registros do RDS e preparar um fluxo de validação da integração.
+- **Resultado gerado:** O front-end deixou de carregar dados iniciais e persistir cadastros em `localStorage`; sem API configurada, exibe listas vazias e um aviso. O painel de aluno informa que documentos ainda não estão integrados, sem simular uploads. As mensagens de erro agora também exibem a propriedade `mensagem` retornada pelo backend. Foi criado `docs/evidencias/roteiro-integracao-rf01.md` com um fluxo CRUD manual e a conferência da restrição de chave estrangeira.
+- **Decisão do grupo:** O grupo deve executar o roteiro usando registros de teste e salvar capturas sem credenciais ou dados pessoais reais.
+- **Limites da validação:** O roteiro foi documentado, mas não foi executado nesta sessão. Relatório e documentos continuam fora da integração implantada.
+
+## Registro — Implementação preparada para a entrega de 23/10
+
+- **Etapa:** Schema e CRUD de planos/alunos
+- **Data:** 22/10/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Implementar a tarefa da entrega de 23 de outubro seguindo o projeto, o enunciado e as restrições do Learner Lab.
+- **Resultado gerado:** Adicionados o schema PostgreSQL em sql/001_schema.sql, o handler Lambda de CRUD em backend/crud_lambda.py, o empacotador e as instruções de implantação no README; criado specs/tasks.md com estados separados para trabalho local e ações pendentes na AWS.
+- **Decisão do grupo:** Código e documentação ficam preparados para revisão. VPC, RDS, Lambda/API publicados e demonstração não foram marcados como concluídos porque esta sessão não tem AWS CLI nem credenciais AWS configuradas. O grupo deve executar e validar esses passos na conta do laboratório.
+
+## Registro — configuração inicial da infraestrutura no Learner Lab
+
+- **Etapa:** Rede, RDS e aplicação do schema
+- **Data:** 03/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Revisar o design, orientar passo a passo a configuração manual da VPC, endpoint do S3, DB subnet group, Security Groups e RDS e registrar o progresso real no repositório.
+- **Resultado gerado:** Foram analisados o enunciado e os artefatos do projeto; o assistente interpretou capturas do Console e orientou a criação de uma subnet privada em AZ diferente, a associação do endpoint Gateway do S3 às route tables privadas, a criação do DB subnet group e a implantação do RDS com acesso público desativado. Também orientou uma EC2 Ubuntu temporária para executar o schema, incluindo instalação do cliente PostgreSQL e correção do nome do database. README.md, specs/design.md, specs/tasks.md e docs/evidencias/infraestrutura.md foram atualizados com o estado atual; este registro foi acrescentado ao ia-log.
+- **Decisão do grupo:** O grupo confirmou a criação da subnet privada 10.20.13.0/24 em us-east-1a, o endpoint S3, o DB subnet group, o RDS privado, os Security Groups e a criação do database academia. Após o erro inicial de database inexistente, o grupo criou o database, reaplicou o schema, confirmou que \dt lista planos e alunos e removeu a regra temporária de sg-admin-db. As capturas ainda não foram salvas no repositório.
+- **Limites da validação:** O assistente não acessou a conta AWS. O estado foi atualizado a partir das capturas e confirmações do grupo. Ainda faltam evidências persistidas de \dt e a confirmação dos IDs/regras finais dos Security Groups e do encerramento da EC2.
+
+## Registro — Preparação do repositório para publicação no GitHub
+
+- **Etapa:** Revisão final da documentação e do versionamento
+- **Data:** 05/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Atualizar os arquivos necessários para enviar o projeto ao GitHub após o encerramento do desenvolvimento.
+- **Resultado gerado:** README raiz reescrito com visão geral, estado confirmado, execução local, empacotamento da Lambda, testes e notas de segurança. Criado `.gitignore` para ignorar segredos locais, caches e ZIPs de implantação. `specs/tasks.md`, `specs/design.md` e a evidência de infraestrutura foram alinhados à confirmação do grupo de que o site S3 e o CORS estão funcionando.
+- **Limites e pendências:** O agente não acessou a AWS, não executou testes e não criou commit ou enviou arquivos ao GitHub. A execução documentada do CRUD, capturas de evidência, URL final do site e os requisitos de documentos e relatório permanecem pendentes no repositório.
+
+## Registro — Envio do projeto atual para a branch main
+
+- **Etapa:** Sincronização do projeto com o GitHub
+- **Data:** 05/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Enviar para `main` o conteúdo do projeto aberto no VS Code, sem duplicá-lo em uma pasta aninhada.
+- **Resultado gerado:** Os arquivos da aplicação, scripts, SQL, especificações e documentação estão organizados na raiz e serão enviados em um commit na branch padrão `main`. As capturas de alunos que exibem dados pessoais foram excluídas do versionamento pelo `.gitignore`; as evidências restantes foram incluídas.
+- **Limites da validação:** Nenhum teste da aplicação foi executado nesta etapa. RF-02/RF-03, RF-04 e os cenários CRUD ainda pendentes permanecem descritos em `specs/tasks.md`.

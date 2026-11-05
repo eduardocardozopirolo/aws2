@@ -2,9 +2,19 @@
 
 Site estático, sem etapa de build. Os arquivos podem ser hospedados diretamente em um bucket S3 configurado para site estático.
 
-## Abrir o protótipo
+## Estado publicado
 
-Abra `index.html` em um navegador. Sem URL de API configurada, a interface usa dados demonstrativos gravados no armazenamento local do navegador. O aviso “Modo protótipo” informa que cadastros e documentos não são enviados à AWS; o envio de documentos é apenas simulado.
+O grupo confirmou a publicação do site no bucket S3 `frontend291000` e que a correção de CORS permitiu a chamada da API pelo navegador. A URL pública final deve ser copiada do Console AWS e registrada em `../docs/evidencias/infraestrutura.md`. A interface implementada integra o CRUD de planos e alunos; documentos e relatório ainda aguardam os endpoints correspondentes.
+
+## Abrir localmente
+
+Defina `API_BASE_URL` em `config.js` e abra a pasta com um servidor local:
+
+```bash
+python3 -m http.server 8000 --directory frontend
+```
+
+Acesse `http://localhost:8000`. A interface não contém dados demonstrativos nem grava cadastros no armazenamento local. Se `API_BASE_URL` estiver vazio, as listas ficam vazias e aparece um aviso de configuração. Se a API não responder, aparece o erro de conexão.
 
 ## Conectar à API
 
@@ -17,7 +27,9 @@ window.APP_CONFIG = {
 };
 ```
 
-O front-end espera os recursos descritos em `../specs/design.md`. As respostas de listagem podem ser arrays JSON ou objetos com `items` ou `data`. A resposta de `/relatorios/alunos-ativos-por-plano` deve conter linhas com nome do plano e quantidade de alunos, por exemplo:
+O CRUD de planos e alunos consome a API configurada. O relatório e o fluxo de documentos ainda dependem de endpoints que não foram implantados; não há dados demonstrativos nem simulação nesses módulos. Consulte `../docs/evidencias/plano-de-testes-aplicacao.md` para a matriz completa de validação e os módulos pendentes.
+
+Quando o relatório for implantado, a resposta de `/relatorios/alunos-ativos-por-plano` deverá conter linhas com nome do plano e quantidade de alunos, por exemplo:
 
 ```json
 [
@@ -25,7 +37,7 @@ O front-end espera os recursos descritos em `../specs/design.md`. As respostas d
 ]
 ```
 
-Para emissão de URL de upload, a interface envia `fileName`, `contentType` e `sizeBytes` e espera `uploadUrl` (ou `upload_url`). O navegador envia o arquivo diretamente ao S3 por `PUT`. A API e o bucket privado precisam permitir CORS para o domínio do site.
+O fluxo de documentos ainda não está ativo nesta interface. Quando os endpoints forem implantados, a API e o bucket privado precisarão permitir CORS para a origem do site.
 
 ## Publicar no S3
 
