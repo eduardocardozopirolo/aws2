@@ -4,7 +4,7 @@ Site estático, sem etapa de build. Os arquivos podem ser hospedados diretamente
 
 ## Estado publicado
 
-O grupo confirmou a publicação do site no bucket S3 `frontend291000` e que a correção de CORS permitiu a chamada da API pelo navegador. A URL pública final deve ser copiada do Console AWS e registrada em `../docs/evidencias/infraestrutura.md`. A interface implementada integra o CRUD de planos e alunos; documentos e relatório ainda aguardam os endpoints correspondentes.
+O grupo confirmou a publicação do site no bucket S3 `frontend291000` e que a correção de CORS permitiu a chamada da API pelo navegador. A URL pública final deve ser copiada do Console AWS e registrada em `../docs/evidencias/infraestrutura.md`. A interface implementa o CRUD de planos e alunos e consulta a rota do relatório RF-04, cuja Lambda e rota foram confirmadas como implantadas pelo grupo. Falta validar o relatório e registrar evidências. Documentos continuam pendentes.
 
 ## Abrir localmente
 
@@ -27,9 +27,9 @@ window.APP_CONFIG = {
 };
 ```
 
-O CRUD de planos e alunos consome a API configurada. O relatório e o fluxo de documentos ainda dependem de endpoints que não foram implantados; não há dados demonstrativos nem simulação nesses módulos. Consulte `../docs/evidencias/plano-de-testes-aplicacao.md` para a matriz completa de validação e os módulos pendentes.
+O CRUD de planos e alunos consome a API configurada. A tela de relatório consulta `/relatorios/alunos-ativos-por-plano`; o handler está em `../backend/report_lambda.py`, e o grupo confirmou que a função e a rota foram implantadas na AWS. Valide os resultados com `../docs/evidencias/plano-de-testes-aplicacao.md`. O fluxo de documentos continua pendente. Não há dados demonstrativos nem simulação nesses módulos.
 
-Quando o relatório for implantado, a resposta de `/relatorios/alunos-ativos-por-plano` deverá conter linhas com nome do plano e quantidade de alunos, por exemplo:
+O endpoint `/relatorios/alunos-ativos-por-plano` retorna linhas com nome do plano e quantidade de alunos, por exemplo:
 
 ```json
 [

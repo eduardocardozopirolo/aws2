@@ -1,6 +1,6 @@
 # Plano de testes da aplicação
 
-Atualizado em 05/11/2026. Casos manuais para validar a interface publicada, a HTTP API, a Lambda CRUD e o RDS. RF-01 e a integração web estão disponíveis para teste segundo a confirmação do grupo. RF-02/RF-03 (documentos) e RF-04 (relatório) ainda não foram implantados; os casos dessas partes ficam como critérios para quando forem concluídas.
+Atualizado em 05/11/2026. Casos manuais para validar a interface publicada, a HTTP API, a Lambda CRUD, a Lambda de relatório RF-04 e o RDS. A implantação da Lambda e da rota do relatório foi confirmada pelo grupo. O caso R01 foi executado por chamada direta e retornou HTTP 200; os cenários R02–R05 ainda aguardam execução. RF-02/RF-03 (documentos) seguem sem implementação.
 
 ## Preparação e segurança dos dados de teste
 
@@ -72,9 +72,9 @@ Esperado: HTTP `409 Conflict`. Depois, exclua primeiro o aluno e tente excluir o
 | D05 | Simular falha de processamento. | O documento fica com estado `falha`, sem perder o vínculo com o aluno. |
 | D06 | Tentar ler o objeto sem URL pré-assinada. | O bucket privado nega o acesso público. |
 
-## Módulo 5 — Relatório (RF-04, pendente)
+## Módulo 5 — Relatório (RF-04, implantação confirmada; validação pendente)
 
-**Não executar ainda:** a rota/Lambda do relatório não está implantada. Após implantação, preparar pelo menos dois planos ativos, um plano ativo sem aluno, alunos ativos e inativos e validar:
+O handler está em `backend/report_lambda.py`, com SQL em `sql/002_relatorio_alunos_ativos_por_plano.sql`. A implantação da função e da rota `GET /v1/relatorios/alunos-ativos-por-plano` foi confirmada pelo grupo. O caso R01 foi exercitado com `curl`: recebeu HTTP/2 200 e retornou os planos ativos `luxo` (0 alunos ativos) e `Movimento` (1 aluno ativo), conforme [evidência da API do relatório](evidencia-api-relatorio-rf04.png). Execute os demais casos com dados artificiais; prepare dois planos ativos (um sem alunos), um plano inativo, alunos ativos e um aluno inativo.
 
 | ID | Ação | Resultado esperado |
 |---|---|---|
@@ -83,3 +83,11 @@ Esperado: HTTP `409 Conflict`. Depois, exclua primeiro o aluno e tente excluir o
 | R03 | Inativar um plano. | O plano inativo deixa de aparecer no relatório. |
 | R04 | Manter um plano ativo sem alunos ativos. | O plano aparece com contagem zero. |
 | R05 | Não haver planos ativos. | A interface mostra mensagem clara de ausência de dados. |
+
+Consulta direta para conferência após a implantação:
+
+```bash
+curl -i "https://an1n7p8et4.execute-api.us-east-1.amazonaws.com/v1/relatorios/alunos-ativos-por-plano"
+```
+
+Resultado observado de R01: HTTP/2 200; JSON com plano `luxo` em quantidade zero e `Movimento` em quantidade um. Veja a captura [evidencia-api-relatorio-rf04.png](evidencia-api-relatorio-rf04.png).

@@ -4,7 +4,7 @@ Roteiro manual para conferir a interface, a HTTP API, a Lambda `academia-crud` e
 
 ## Escopo
 
-Este roteiro cobre o CRUD de planos e alunos. O endpoint de relatório e as rotas de documentos ainda não fazem parte da Lambda implantada.
+Este roteiro cobre o CRUD de planos e alunos. O relatório RF-04 tem implementação separada em `backend/report_lambda.py`; a implantação da Lambda e da rota foi confirmada pelo grupo. Consulte o módulo RF-04 de `plano-de-testes-aplicacao.md` para validar o relatório. As rotas de documentos continuam pendentes.
 
 ## Preparação
 

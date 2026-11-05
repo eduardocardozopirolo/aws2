@@ -15,7 +15,9 @@ __pycache__/
 
 # Artefatos gerados para implantação
 backend/build/
+backend/build-report/
 backend/crud_lambda.zip
+backend/report_lambda.zip
 frontend.zip
 
 # Capturas locais com dados pessoais reais; gerar versões anonimizadas antes de publicar

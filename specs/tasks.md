@@ -13,5 +13,5 @@ Estado em 05/11/2026. Os itens informados pelo grupo ainda devem receber evidên
 | T07 | — | Salvar evidências de VPC, endpoint S3, RDS, SGs e schema em docs/evidencias/. | Grupo | Parcial: mapa da VPC e detalhes do RDS salvos; faltam SGs, schema e demais evidências listadas em infraestrutura.md |
 | T08 | RNF-01 | Remover regra temporária de sg-admin-db e encerrar a EC2 Ubuntu após concluir o schema. | Grupo | Regra removida segundo confirmação; captura de 05/11/2026 mostra nenhuma instância EC2 na região us-east-1 |
 | T09 | RF-02, RF-03 | Criar migração da tabela documentos, URL pré-assinada e fluxo S3 → Lambda → RDS. | Grupo | Pendente de implementação |
-| T10 | RF-04 | Implementar relatório agregado por plano em Lambda e API Gateway. | Grupo | Pendente de implementação |
+| T10 | RF-04 | Implementar relatório agregado por plano em Lambda e API Gateway. | Grupo | Handler, SQL e empacotador implementados; implantação confirmada; GET retornou HTTP 200 com planos ativos e contagem zero registrada em evidência; cenários restantes de teste pendentes |
 | T11 | RF-05 | Publicar front-end integrado à API e atualizar o design conforme os recursos reais. | Grupo | Site publicado no S3 e CORS corrigido segundo confirmação do grupo; salvar evidências e executar validação final |

@@ -65,6 +65,8 @@ Uma regra temporária TCP 5432 com origem em sg-admin-db foi adicionada para apl
 | URL base usada pelo front-end | `https://an1n7p8et4.execute-api.us-east-1.amazonaws.com/v1` |
 | Estado | O grupo confirmou resposta da API após corrigir incompatibilidade entre `pg8000` e `scramp`; o fluxo CRUD ainda precisa de validação e evidências |
 
+O handler da Lambda separada `academia-relatorio` está em `backend/report_lambda.py`; o pacote é gerado com `bash backend/package_report.sh`. Em 05/11/2026, o grupo confirmou a implantação da Lambda e da rota `GET /v1/relatorios/alunos-ativos-por-plano` no API Gateway. Uma chamada direta com `curl` retornou HTTP/2 200 e dois planos: `luxo` com zero alunos ativos e `Movimento` com um. A captura está salva como `evidencia-api-relatorio-rf04.png`; a validação dos cenários restantes e da tela ainda está pendente. O agente não acessou a conta AWS.
+
 O pacote atual fixa `pg8000==1.31.6` e `scramp==1.5.0`. Credenciais do RDS permanecem somente na configuração da Lambda e não devem ser registradas neste inventário.
 
 ## Site estático no S3 e CORS
@@ -87,7 +89,8 @@ A tela inicial de CORS mostrava uma URL de objeto S3. A origem final deve corres
 - Pendente: registrar a saída de `\dt` e os IDs/regras finais dos SGs.
 - Concluído segundo confirmação do grupo: publicação da Lambda CRUD e da HTTP API; resposta observada após atualização das dependências.
 - Concluído segundo confirmação do grupo: publicação do site no S3 e correção do CORS da API para permitir a integração pelo navegador.
-- Pendente: executar o roteiro CRUD em docs/evidencias/roteiro-integracao-rf01.md, salvar evidências, registrar a URL final do site e implementar o fluxo de documentos e o relatório.
+- Concluído segundo confirmação do grupo: implantação da Lambda de relatório RF-04 e da rota `GET /v1/relatorios/alunos-ativos-por-plano`; chamada direta retorna HTTP 200 e a evidência foi salva. Faltam os demais cenários de teste e a validação da tela.
+- Pendente: executar o roteiro CRUD em docs/evidencias/roteiro-integracao-rf01.md, salvar evidências, registrar a URL final do site e implementar o fluxo de documentos.
 
 ## Capturas salvas
 
@@ -118,6 +121,12 @@ A captura do site mostra o plano ativo `Movimento`, seu preço e a quantidade de
 A chamada direta `GET /v1/planos` retorna o mesmo registro em JSON. As duas capturas comprovam a leitura de planos pela API e sua apresentação na interface.
 
 ![Resposta JSON de GET /v1/planos](evidencia-api-listagem-planos.png)
+
+### Relatório RF-04
+
+A chamada direta com `curl` ao endpoint do relatório retornou HTTP/2 200 e JSON com dois planos ativos: `luxo`, com zero alunos ativos, e `Movimento`, com um aluno ativo.
+
+![Resposta HTTP 200 do relatório de alunos ativos por plano](evidencia-api-relatorio-rf04.png)
 
 ### Alunos
 

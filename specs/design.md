@@ -1,6 +1,6 @@
 # Design — Sistema de Gestão de Academia
 
-> A arquitetura completa planejada atende à especificação em specs/spec.md. Em 03/11/2026, a VPC, o endpoint Gateway do S3, o DB subnet group e o RDS privado foram configurados no Learner Lab. O grupo confirmou a criação do banco, a aplicação do schema, a conferência das tabelas e a remoção da regra temporária sg-admin-db. Em 04/11/2026, confirmou a implantação da Lambda CRUD e da HTTP API e que a API respondeu após corrigir a incompatibilidade entre pg8000 e scramp. Em 05/11/2026, confirmou a publicação do site no S3 e a correção do CORS. A execução formal do CRUD e o registro de evidências continuam pendentes; upload, processamento de documentos e relatório ainda não foram implantados. Veja docs/evidencias/infraestrutura.md e specs/tasks.md para o estado detalhado.
+> A arquitetura completa planejada atende à especificação em specs/spec.md. Em 03/11/2026, a VPC, o endpoint Gateway do S3, o DB subnet group e o RDS privado foram configurados no Learner Lab. O grupo confirmou a criação do banco, a aplicação do schema, a conferência das tabelas e a remoção da regra temporária sg-admin-db. Em 04/11/2026, confirmou a implantação da Lambda CRUD e da HTTP API e que a API respondeu após corrigir a incompatibilidade entre pg8000 e scramp. Em 05/11/2026, confirmou a publicação do site no S3 e a correção do CORS. O handler RF-04 foi implementado e a implantação da Lambda de relatório e de sua rota no API Gateway foi confirmada. Uma consulta direta retornou HTTP 200 e foi registrada como evidência; os demais cenários e a tela ainda precisam de validação. O upload e processamento de documentos ainda não foram implantados. Veja docs/evidencias/infraestrutura.md e specs/tasks.md para o estado detalhado.
 
 ## Estado da implantação — 05/11/2026
 
@@ -15,6 +15,7 @@
 | Security Groups | sg-lambda-api, sg-lambda-processamento e sg-rds configurados conforme confirmação do grupo; verificar IDs e regras no Console |
 | EC2 administrativa | Instância temporária Ubuntu usada para aplicação do schema; regra sg-admin-db removida, encerramento da instância ainda não confirmado |
 | Lambda CRUD e HTTP API | Implantadas segundo confirmação do grupo; integração com RDS respondeu após correção da dependência; fluxo CRUD ainda precisa ser evidenciado |
+| Lambda de relatório RF-04 | Implantada segundo confirmação do grupo; chamada direta validada com HTTP 200 e evidência salva; demais cenários e interface pendentes |
 | Bucket S3 de documentos | Ainda não implantado |
 | Site estático | Publicado no bucket S3 `frontend291000` segundo confirmação do grupo; CORS corrigido; URL final a registrar |
 
@@ -220,5 +221,5 @@ O grupo confirmou que criou a VPC e o RDS privado, aplicou sql/001_schema.sql us
 - Confirmar se a exclusão de aluno será física ou se a interface oferecerá apenas inativação quando houver documentos associados.
 - Registrar a classe e o tamanho de armazenamento efetivamente usados no RDS e confirmar no Console os IDs, associações e regras dos Security Groups.
 - Registrar a URL final do site, salvar evidências da publicação e executar o roteiro CRUD.
-- Implementar a tabela documentos, o processamento S3 e o relatório; atualizar o design conforme os recursos implantados.
+- Validar a Lambda e a rota do relatório RF-04 com os casos de teste; implementar a tabela documentos e o processamento S3; atualizar o design conforme os recursos implantados.
 

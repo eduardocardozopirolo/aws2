@@ -106,3 +106,30 @@ Adicionar esta reflexão ao final do projeto, depois de avaliar como as ferramen
 - **Solicitação:** Enviar para `main` o conteúdo do projeto aberto no VS Code, sem duplicá-lo em uma pasta aninhada.
 - **Resultado gerado:** Os arquivos da aplicação, scripts, SQL, especificações e documentação estão organizados na raiz e serão enviados em um commit na branch padrão `main`. As capturas de alunos que exibem dados pessoais foram excluídas do versionamento pelo `.gitignore`; as evidências restantes foram incluídas.
 - **Limites da validação:** Nenhum teste da aplicação foi executado nesta etapa. RF-02/RF-03, RF-04 e os cenários CRUD ainda pendentes permanecem descritos em `specs/tasks.md`.
+
+## Registro — Implementação local do relatório RF-04
+
+- **Etapa:** Relatório de alunos ativos por plano
+- **Data:** 05/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Criar o relatório exigido pelo RF-04.
+- **Resultado gerado:** Criados `backend/report_lambda.py`, `backend/package_report.sh` e `sql/002_relatorio_alunos_ativos_por_plano.sql`. A consulta usa `LEFT JOIN`, filtra planos e alunos ativos, agrupa por plano e retorna contagem zero para planos ativos sem alunos. A interface existente já consome a rota; README, design, tarefas e plano de testes foram atualizados com os passos de implantação.
+- **Limites da validação:** A função Lambda e a rota do API Gateway ainda precisam ser implantadas na AWS. Não foram executados testes nesta etapa.
+
+## Registro — Implantação da rota do relatório RF-04
+
+- **Etapa:** Publicação do relatório na AWS
+- **Data:** 05/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Atualizar o estado do projeto depois da implantação da Lambda de relatório e da rota no API Gateway.
+- **Resultado registrado:** O grupo confirmou que concluiu a criação/associação da rota `GET /v1/relatorios/alunos-ativos-por-plano` com a Lambda `academia-relatorio`. Os arquivos README, design, tarefas, plano de testes e inventário de infraestrutura foram alinhados a esse estado.
+- **Limites da validação:** O agente não acessou a conta AWS nem recebeu o resultado de uma chamada bem-sucedida ao endpoint. A validação funcional do relatório e as evidências correspondentes continuam pendentes; RF-02/RF-03 (documentos) e parte dos testes CRUD também seguem pendentes.
+
+## Registro — Evidência da consulta RF-04
+
+- **Etapa:** Validação inicial do relatório implantado
+- **Data:** 05/11/2026
+- **Ferramenta:** Assistente de IA nesta conversa (Codex).
+- **Solicitação:** Adicionar a captura da resposta do endpoint às evidências do projeto.
+- **Resultado registrado:** Adicionada `docs/evidencias/evidencia-api-relatorio-rf04.png`. A captura mostra chamada direta com `curl` ao endpoint RF-04, HTTP/2 200 e JSON com `luxo` (zero alunos ativos) e `Movimento` (um aluno ativo). O plano de testes, o design e o inventário da infraestrutura registram esse resultado.
+- **Limites da validação:** A captura comprova apenas essa consulta. Os cenários de inativação, ausência de planos ativos e atualização dos dados, além da validação pela interface, ainda não foram registrados.
