@@ -44,6 +44,7 @@ A consulta retorna todos os planos ativos e conta somente alunos ativos. O `LEFT
 - [Plano de testes da aplicação](docs/evidencias/plano-de-testes-aplicacao.md): cobre os módulos implementados e identifica os que aguardam implementação.
 - [Roteiro de integração RF-01](docs/evidencias/roteiro-integracao-rf01.md): fluxo manual entre interface, API, Lambda e RDS.
 - [Infraestrutura AWS](docs/evidencias/infraestrutura.md): recursos conhecidos, fonte das informações e confirmações pendentes.
+- [Reflexão final sobre o uso de IA](docs/reflexao-final.md): contribuições, revisão das sugestões e limites da validação.
 
 As capturas disponíveis da VPC, RDS, EC2, site de planos e resposta da API estão em `docs/evidencias/infraestrutura.md`. Capturas de alunos com dados pessoais foram mantidas localmente e ignoradas pelo Git; gere versões com dados fictícios para incluí-las no repositório público. Os resultados dos demais passos do roteiro CRUD ainda devem ser adicionados após a execução pelo grupo.
 

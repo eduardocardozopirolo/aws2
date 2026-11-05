@@ -58,7 +58,7 @@ Este arquivo registra usos relevantes de ferramentas de inteligência artificial
 
 ## Reflexão final
 
-Adicionar esta reflexão ao final do projeto, depois de avaliar como as ferramentas de IA ajudaram, quais sugestões foram alteradas ou descartadas e como o grupo verificou o resultado.
+Consulte a reflexão completa em [docs/reflexao-final.md](reflexao-final.md). Em resumo, o Codex apoiou a análise, implementação, diagnóstico e documentação, mas suas sugestões foram conferidas com o enunciado, os logs, as capturas e as respostas reais da API. O grupo executou as configurações AWS e tomou as decisões finais. A validação obtida cobre alguns fluxos, não todos: RF-02/RF-03 e parte dos testes CRUD e do relatório continuam pendentes. Os usos registrados aqui foram com Codex; qualquer uso separado de GitHub Copilot deve ser acrescentado pelo grupo.
 
 ## Registro — remoção dos dados de demonstração e roteiro de integração
 
