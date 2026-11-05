@@ -2,15 +2,6 @@
 
 Projeto acadêmico para administrar planos e alunos de uma academia. O front-end estático consome uma HTTP API no API Gateway; a API executa o CRUD em uma função AWS Lambda conectada a um RDS PostgreSQL privado.
 
-## Estado do projeto
-
-Atualizado em 05/11/2026, com base no código versionado e nas confirmações do grupo. Não houve acesso direto à conta AWS nesta revisão.
-
-- **RF-01 — planos e alunos:** handler Lambda e interface integrados à API. O grupo confirmou que API, site S3 e CORS estão funcionando. A execução completa dos casos CRUD e o salvamento das evidências ainda precisam ser registrados.
-- **RF-02/RF-03 — documentos:** tabela, upload com URL pré-assinada e processamento S3 ainda não estão implementados neste repositório.
-- **RF-04 — relatório:** handler, consulta e interface implementados; implantação confirmada. Uma chamada direta ao endpoint retornou HTTP 200, com dois planos, inclusive um com contagem zero. Os demais cenários ainda precisam ser validados.
-- **Infraestrutura:** inventário conhecido e itens a confirmar estão em [docs/evidencias/infraestrutura.md](docs/evidencias/infraestrutura.md).
-
 ## Executar localmente
 
 Requer Python 3 para servir os arquivos estáticos e uma API já implantada para usar os dados reais.
